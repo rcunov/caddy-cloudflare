@@ -1,0 +1,58 @@
+---
+version: '3.7'
+services:
+  caddy:
+    container_name: caddy
+    build:
+      context: .
+      dockerfile: Dockerfile_caddy
+    restart: unless-stopped
+    networks:
+      - caddy
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2019:2019'
+    volumes:
+      - caddy-config:/config
+      - caddy-data:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    env_file:
+      - plex_env.ini
+    volumes:
+      - plex:/config
+      - /mnt/data/Media/TV:/tv:ro
+      - /mnt/data/Media/Movies:/movies:ro
+      - /mnt/data/Media/Music:/music:ro
+      - /mnt/data/Media/Other:/other:ro
+    restart: unless-stopped
+
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: heimdall
+    restart: unless-stopped
+    environment:
+      # port 80
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - heimdall:/config
+    networks:
+      - caddy
+
+networks:
+  caddy:
+
+volumes:
+  caddy-config:
+  caddy-data:
+  plex:
+  heimdall:
+  smokeping-config:
+  smokeping-data:

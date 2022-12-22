@@ -1,0 +1,20 @@
+*.domain.tld {
+	tls {
+		dns cloudflare my-super-secret-token
+	}
+
+	@app1 host app1.domain.tld
+	handle @app1 {
+		reverse_proxy http://app1:9091
+	}
+
+	@app2 host app2.domain.tld
+	handle @app2 {
+		reverse_proxy http://app2:8989
+	}
+
+	@app3 host app3.domain.tld
+	handle @app3 {
+		reverse_proxy http://app3:7878
+	}
+}
