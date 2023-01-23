@@ -1,0 +1,33 @@
+---
+version: '3.7'
+services:
+  caddy:
+    container_name: caddy
+    build:
+      context: .
+    restart: unless-stopped
+    networks:
+      - caddy
+    ports: # i dont expose these ports unless i need them
+      # - '80:80'
+      - '443:443'
+      # - '2019:2019'  # caddy API
+    volumes:
+      - caddy-config:/config
+      - caddy-data:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - PROXY_DOMAIN=${PROXY_DOMAIN}
+
+  nginx:
+    image: nginx
+    networks:  # this is how you would add
+      - caddy  # another container to caddy
+
+networks:
+  caddy:
+
+volumes:
+  caddy-config:
+  caddy-data:
