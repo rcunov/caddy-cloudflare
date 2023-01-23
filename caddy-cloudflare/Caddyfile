@@ -1,0 +1,19 @@
+*.{env.PROXY_DOMAIN} {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+
+	@nginx host nginx.{env.PROXY_DOMAIN}  # -- HTTP example
+	handle @nginx {                       # this uses the DNS of the caddy container,
+		reverse_proxy http://nginx:80     # not the host DNS. thats why we can just let docker
+	}                                     # handle DNS for connections to other containers
+
+	@app2 host app2.{env.PROXY_DOMAIN}    # HTTPS example
+	handle @app2 {
+		reverse_proxy https://app2:8989 {
+			transport http {                  # remove this transport directive
+				tls tls_insecure_skip_verify  # from the "{" one line 13 to "}" on line 17
+			}                                 # if you are not using a self-signed cert
+		}
+	}
+}
