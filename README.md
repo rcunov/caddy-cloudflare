@@ -1,10 +1,22 @@
-# Current Docker stack notes
+# caddy-cloudflare
 
-Heimdall &#10231; Proxmox API tutorial:
-* Under Datacenter &#10142; Permissions &#10142; API Tokens, click 'Add', select your user and give the token a name under Token ID
-* After clicking 'Add', note down the Token ID and Secret (The secret is only shown once after saving)
-* Under Datacenter &#10142; Permissions, click 'Add &#10142; API Token Permission'
-* Under Path, select '/nodes', select your API token, and assign the role 'PVEAuditor', then click 'Add'
-* On your Heimdall instance, edit the Proxmox entry and input the Token ID and Secret (=Key) that you noted down earlier at the bottom of the settings page
+A simple Docker Compose stack to set up a Caddy container with the Cloudflare DNS plugin and prepare it as a reverse proxy. 
 
-Credit to heisenberglabs#3232 in the Linuxserver.io discord.
+## Set up Environment variables
+
+Clone the repository (or create a folder for the project) and create a file called `.env` within the folder. Fill it with the following variables:
+
+```
+CLOUDFLARE_API_TOKEN=yourtokenhere
+PROXY_DOMAIN=example.com
+```
+
+If you don't know how to get your Cloudflare API token, this [blog post](https://samjmck.com/en/blog/using-caddy-with-cloudflare/#2-using-a-lets-encrypt-certificate) has more information.
+
+## Set up Caddyfile
+
+Take the example `Caddyfile` provided and tweak it to add your reverse proxy hosts. Both HTTP and HTTPS examples have been filled out to give you an idea of what it should look like.
+
+## Run with Docker Compose
+
+`docker compose up -d`

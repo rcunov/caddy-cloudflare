@@ -5,7 +5,7 @@ on:
     branches:
       - "testing"
     paths:
-      - "caddy-cloudflare/Dockerfile"
+      - "Dockerfile"
 
 jobs:
   build-test:
@@ -27,6 +27,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: caddy-cloudflare/Dockerfile
+          file: ./Dockerfile
           push: false
           tags: ${{ secrets.DOCKERHUB_USER }}/caddy-cloudflare:latest
